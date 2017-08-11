@@ -1,17 +1,61 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>DineNow</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+  <div class="search-container" [style.display]="!showMap? 'none': 'inherit'">
+    <img [@flip]="flipState" #foodImage class="search-food fadein" src="assets/images/food.jpg" (click)="getPlace(); toggleFlip()">
+    <!-- <div class="overlay" ></div> -->
+  </div>
+  <div class="distance-container" [style.display]="!showMap? 'none': 'inherit'">
+    <ion-item>
+      <ion-label fixed>Distance (mi)</ion-label>
+      <ion-input type="number" [(ngModel)]="distance"></ion-input>
+    </ion-item>
+    <p>Set the radius to search for and let luck decide what to eat!</p>
+  </div>
+  <ion-card class="fadein" [style.display]="showMap? 'none': 'inherit'">
+    <div class="google-maps" #mapContainer></div>
+    <ion-fab right top *ngIf="place">
+      <button ion-fab>
+        <ion-icon name="compass"><a href="place.url" target="_blank"></a></ion-icon>
+      </button>
+    </ion-fab>
+    <ion-item *ngIf="place">
+      <ion-avatar item-start>
+        <img src="{{place.icon}}">
+      </ion-avatar>
+      <h2>{{place.name}}</h2>
+      <p>{{place.formatted_address}}</p>
+      <p>{{formatted_phone_number}}</p>
+      <a href="{{place.website}}">{{place.website}}</a>
+      <p><b>Rating:</b> {{place.rating}}</p>
+    </ion-item>
+    <ion-card-content *ngIf="place">
+      <div class="bold">Hours:</div>
+      <ul>
+        <li *ngFor="let item of place.opening_hours.weekday_text">{{item}}</li>
+      </ul>
+      <div>
+        <div class="bold">Reviews</div>
+        <ion-scroll scrollY="true">
+          <div class="review" *ngFor="let review of place.reviews">
+            <div>{{review.author_name}}</div>
+            <div><b>Rating:</b> {{review.rating}} {{review.relative_time_description}}</div>
+            <div>{{review.text}}</div>
+          </div>
+        </ion-scroll>
+      </div>
+      <ion-item>
+        <div class="photo-container">
+          <button ion-fab [disabled]="photoCount == 0" (click)="prevPhoto()"><ion-icon name="arrow-back" ></ion-icon></button>
+          <img #photo src="{{place.photos[photoCount].getUrl({maxWidth: 250, maxHeight: 250})}}">
+          <button ion-fab [disabled]="photoCount == place.photos.length" (click)="nextPhoto()"><ion-icon name="arrow-forward"></ion-icon></button>
+        </div>
+      </ion-item>
+    </ion-card-content>
+    <button ion-button full (click)="showMap = !showMap; toggleFlip(); resetLocation()">Try Again I Guess...</button>
+  </ion-card>
 </ion-content>

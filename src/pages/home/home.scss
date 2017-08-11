@@ -1,3 +1,116 @@
 page-home {
 
+    .search-container {
+        display: block;
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+
+        &:hover .overlay {
+            opacity: 0.25;
+        }
+
+        .search-food {
+            border-radius: 100%;
+            width: 300px;
+            height: 300px;
+            object-fit: scale-down;
+            box-shadow: 1px 5px 5px lightgrey;
+            cursor: pointer;
+            opacity: 1;
+            outline: 0;
+        }
+
+        .overlay {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 100%;
+            background-color: lightblue;
+            opacity: 0;
+            transition:.5s ease;
+            z-index: 100;
+            top: 0;
+            cursor: pointer;
+        }
+    }
+
+    .google-maps {
+        width: 400px;
+        height: 400px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .distance-container {
+        margin-top: 10px;
+    }
+
+    .fadein {
+        -webkit-animation: fadein 2s;
+        -moz-animation: fadein 2s;
+        -ms-animation: fadein 2s;
+        -o-animation: fadein 2s;
+        animation: fadein 2s;
+    }
+
+    button {
+        margin-top: 10px;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    p, h2 {
+        white-space: normal;
+    }
+
+    ul {
+        list-style-type: none;
+        font-size: 1.2rem;
+        margin-top: 0;
+        padding: 0;
+    }
+
+    ion-scroll {
+        height: 150px;
+    }
+
+    .review {
+        margin: 5px;
+        padding: 5px 0;
+        border-top: 1px solid grey;
+        &:first-child {
+            border-top: none;
+        }
+        div:nth-child(3){
+            padding-left: 10px;
+        }
+
+        div:nth-child(1){
+            font-weight: bold;
+        }
+    }
+
+    .photo-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        img {
+            margin: 4px 10px;
+        }
+
+        button {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    @keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
 }
