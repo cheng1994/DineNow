@@ -1,6 +1,7 @@
 import { Component, ViewChild, Renderer, trigger, state, style, transition, animate } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, Platform } from 'ionic-angular';
 import { GooglePlacesProvider } from '../../providers/google-places/google-places';
+import { Geolocation } from '@ionic-native/geolocation';
 
 declare var google: any;
 
@@ -33,10 +34,11 @@ export class HomePage {
 	@ViewChild('foodImage') foodImage;
 	@ViewChild('photo') photo;
 	
-	constructor(public navCtrl: NavController, 
+	constructor(public platform: Platform, public navCtrl: NavController, 
 		public alertCtrl: AlertController, 
 		public googlePlacesProvider: GooglePlacesProvider,
-		public renderer: Renderer) {
+		public renderer: Renderer,
+		private geolocation: Geolocation) {
 		
 	}
 
@@ -49,8 +51,23 @@ export class HomePage {
 			center: {lat: -34.397, lng: 150.644},
 			zoom: 13
 		});
+		this.geolocation.getCurrentPosition
 		this.infoWindow = new google.maps.InfoWindow;
-		if(navigator.geolocation){
+		if(this.platform.is('cordova')){
+			this.geolocation.getCurrentPosition().then((resp) => {
+				var pos = {
+					lat: resp.coords.latitude,
+					lng: resp.coords.longitude
+				};
+				this.map.setCenter(pos);
+			   }).catch((error) => {
+					let alert = this.alertCtrl.create({
+						title: 'Error',
+						subTitle: 'Geolocation failed: ' + error
+					})
+			   });
+		}
+		else if(navigator.geolocation){
 			navigator.geolocation.getCurrentPosition((position) => {
 				var pos = {
 					lat: position.coords.latitude,
@@ -60,11 +77,11 @@ export class HomePage {
 				// this.infoWindow.setContent('Location found.');
 				// this.infoWindow.open(this.map);
 				this.map.setCenter(pos);
-			}, () => {
+			}, (error) => {
 				let alert = this.alertCtrl.create({
 					title: 'Error',
-					subTitle: 'Geolocation failed'
-				})
+					subTitle: 'Geolocation failed: ' + error
+				});
 				alert.present();
 			})
 		}
@@ -113,7 +130,21 @@ export class HomePage {
 			this.markers[i].setMap(null);
 		}
 		this.markers.length = 0;
-		if(navigator.geolocation){
+		if(this.platform.is('cordova')){
+			this.geolocation.getCurrentPosition().then((resp) => {
+				var pos = {
+					lat: resp.coords.latitude,
+					lng: resp.coords.longitude
+				};
+				this.map.setCenter(pos);
+			   }).catch((error) => {
+					let alert = this.alertCtrl.create({
+						title: 'Error',
+						subTitle: 'Geolocation failed: ' + error
+					})
+			   });
+		}
+		else if(navigator.geolocation){
 			navigator.geolocation.getCurrentPosition((position) => {
 				var pos = {
 					lat: position.coords.latitude,

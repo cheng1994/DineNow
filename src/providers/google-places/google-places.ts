@@ -14,7 +14,7 @@ export class GooglePlacesProvider {
 
 	service: any;
 
-	constructor(public http: Http) {
+	constructor(public http: Http, private geolocation: Geolocation) {
 	}
 
 	getPlace(map, distance) {
